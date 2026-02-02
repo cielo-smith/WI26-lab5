@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survey</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Quick Survey</h1>
+
+        <!-- =================================================================
+             SSR FORM: Submits to /submit-ssr, returns same page with results
+        ================================================================= -->
+        <section class="form-section">
+            <h2>Option 1: SSR Submission</h2>
+
+            <!-- TODO: Create a form that:
+                 - Has action="/submit-ssr" and method="post"
+                 - Contains input fields for: name, favorite_color, feedback
+                 - Has a submit button
+            -->
+
+            <!-- SSR Result displays here after form submission (page reloads) -->
+            {% if ssr_result %}
+            <div class="result">
+                <h3>Your Response:</h3>
+                <p><strong>Name:</strong> {{ ssr_result.name }}</p>
+                <p><strong>Color:</strong> {{ ssr_result.favorite_color }}</p>
+                <p><strong>Feedback:</strong> {{ ssr_result.feedback }}</p>
+            </div>
+            {% endif %}
+        </section>
+
+        <!-- =================================================================
+             API FORM: JavaScript fetch to /submit-api, updates page
+        ================================================================= -->
+        <section class="form-section">
+            <h2>Option 2: JavaScript Submission</h2>
+
+            <!-- TODO: Create a form with id="api-form" (no action/method needed)
+                 - Contains input fields for: name, favorite_color, feedback
+                 - Has a submit button
+            -->
+
+            <!-- Result displays here without page reload -->
+            <div id="api-result" class="result" style="display: none;">
+                <h3>Your Response:</h3>
+                <p><strong>Name:</strong> <span id="result-name"></span></p>
+                <p><strong>Color:</strong> <span id="result-color"></span></p>
+                <p><strong>Feedback:</strong> <span id="result-feedback"></span></p>
+            </div>
+        </section>
+    </div>
+
+    <script src="{{ url_for('static', path='js/script.js') }}"></script>
+</body>
+</html>
