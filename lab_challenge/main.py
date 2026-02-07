@@ -14,10 +14,18 @@ templates = Jinja2Templates(directory="templates")
 
 # TODO 1: Create a Pydantic model for the survey data (name, favorite_color, feedback)
 # Hint: class SurveyData(BaseModel): ...
+class SurveyData(BaseModel):
+    name: str
+    favorite_color: str
+    feedback: str
 
 
 # TODO 2: Create a GET route at "/" that serves the survey.html template
 # Hint: Use templates.TemplateResponse(request, "survey.html", {})
+@app.get("/", response_class=HTMLResponse)
+async def show_form(request: Request):
+    """Serve the form page with both SSR and client-side examples."""
+    return templates.TemplateResponse(request, "survey.html", {})
 
 
 # =============================================================================
@@ -29,6 +37,15 @@ templates = Jinja2Templates(directory="templates")
 #   - Returns survey.html template with the results (same page, inline results)
 # Hint: return templates.TemplateResponse(request, "survey.html",
 #           {"ssr_result": {"name": name, "favorite_color": favorite_color, "feedback": feedback}})
+@app.post("/submit-ssr", response_class=HTMLResponse)
+async def handle_form_ssr(request: Request, name: str = Form(...), favorite_color: str = Form(...), feedback: str = Form(...)):
+    return templates.TemplateResponse(
+        request,
+        "survey.html",
+        {"ssr_result": {"name": name, "favorite_color": favorite_color, "feedback": feedback}}
+    )
+
+
 
 
 # =============================================================================
@@ -40,6 +57,14 @@ templates = Jinja2Templates(directory="templates")
 #   - Returns JSON response with the survey data
 # Hint: async def submit_api(data: SurveyData):
 #       return {"success": True, "name": data.name, ...}
+@app.post("/submit-api")
+async def handle_form_api(data: SurveyData):
+    return {
+        "success": True,
+        "name": data.name,
+        "favorite_color": data.favorite_color,
+        "feedback": data.feedback
+    }
 
 
 if __name__ == "__main__":
